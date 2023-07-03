@@ -150,35 +150,35 @@ int create_socket(const char *ethx, const char *src_ip, int src_port, const char
     // int len;
 
     // 初始化能力集
-    // caps = cap_get_proc();
-    // if (caps == NULL)
-    // {
-    //     perror("cap_get_proc");
-    //     exit(1);
-    // }
+    caps = cap_get_proc();
+    if (caps == NULL)
+    {
+        perror("cap_get_proc");
+        exit(1);
+    }
 
-    // // 设置 CAP_NET_RAW 和 CAP_NET_BIND_SERVICE 权限
-    // cap_list[0] = CAP_NET_RAW;
-    // cap_list[1] = CAP_NET_BIND_SERVICE;
-    // if (cap_set_flag(caps, CAP_PERMITTED, 2, cap_list, CAP_SET) < 0)
-    // {
-    //     perror("cap_set_flag");
-    //     exit(1);
-    // }
-    // if (cap_set_flag(caps, CAP_EFFECTIVE, 2, cap_list, CAP_SET) < 0)
-    // {
-    //     perror("cap_set_flag");
-    //     exit(1);
-    // }
+    // 设置 CAP_NET_RAW 和 CAP_NET_BIND_SERVICE 权限
+    cap_list[0] = CAP_NET_RAW;
+    cap_list[1] = CAP_NET_BIND_SERVICE;
+    if (cap_set_flag(caps, CAP_PERMITTED, 2, cap_list, CAP_SET) < 0)
+    {
+        perror("cap_set_flag");
+        exit(1);
+    }
+    if (cap_set_flag(caps, CAP_EFFECTIVE, 2, cap_list, CAP_SET) < 0)
+    {
+        perror("cap_set_flag");
+        exit(1);
+    }
 
-    // // 设置能力集
-    // if (cap_set_proc(caps) < 0)
-    // {
-    //     perror("cap_set_proc");
-    //     exit(1);
-    // }
+    // 设置能力集
+    if (cap_set_proc(caps) < 0)
+    {
+        perror("cap_set_proc");
+        exit(1);
+    }
 
-    // cap_free(caps);
+    cap_free(caps);
 
     if ((fd = socket(AF_INET, SOCK_STREAM, 0)) < 0)
     {
