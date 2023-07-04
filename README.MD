@@ -1,8 +1,9 @@
 
 ## 安装kafka
 
-[官方教程](https://kafka.apache.org/34/documentation.html)
+> **NOTE: Your local environment must have Java 8+ installed.**
 
+[官方教程](https://kafka.apache.org/34/documentation.html)
 
 ```sh
 cd ~

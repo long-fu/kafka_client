@@ -159,8 +159,8 @@ int create_socket(const char *ethx, const char *src_ip, int src_port, const char
   caps = cap_get_proc();
   if (caps == NULL)
   {
-    perror("cap_get_proc");
-    exit(1);
+    printf("cap_get_proc");
+    return -1;
   }
 
   // 设置 CAP_NET_RAW 和 CAP_NET_BIND_SERVICE 权限
@@ -168,20 +168,20 @@ int create_socket(const char *ethx, const char *src_ip, int src_port, const char
   cap_list[1] = CAP_NET_BIND_SERVICE;
   if (cap_set_flag(caps, CAP_PERMITTED, 2, cap_list, CAP_SET) < 0)
   {
-    perror("cap_set_flag");
-    exit(1);
+    printf("cap_set_flag");
+    return -1;
   }
   if (cap_set_flag(caps, CAP_EFFECTIVE, 2, cap_list, CAP_SET) < 0)
   {
-    perror("cap_set_flag");
-    exit(1);
+    printf("cap_set_flag");
+    return -1;
   }
 
   // 设置能力集
   if (cap_set_proc(caps) < 0)
   {
-    perror("cap_set_proc");
-    exit(1);
+    printf("cap_set_proc");
+    return -1;
   }
 
   cap_free(caps);
@@ -202,7 +202,6 @@ int create_socket(const char *ethx, const char *src_ip, int src_port, const char
   if (ret < 0)
   {
     printf("bind error!!!");
-    perror("bind:");
     close(fd);
     return -1;
   }

@@ -95,7 +95,7 @@ static char* response_buf;
 
 static int on_body(http_parser *p, const char *buf, size_t len)
 {
-    strlncat(response_buf, sizeof(response_buf), buf, len);
+    strlncat(response_buf, strlen(response_buf), buf, len);
     return 0;
 }
 
