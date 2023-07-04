@@ -37,8 +37,13 @@ bin/kafka-consumer-groups.sh --bootstrap-server localhost:9092 --list
 # 进入生产者交互窗口
 bin/kafka-console-producer.sh --topic quickstart-events --bootstrap-server localhost:9092
 
+bin/kafka-console-producer.sh --topic haoshuai-events --bootstrap-server localhost:9092
+
+
 # 进入消费者交互窗口
 bin/kafka-console-consumer.sh --topic quickstart-events --from-beginning --bootstrap-server localhost:9092
+
+bin/kafka-console-consumer.sh --topic haoshuai-events --from-beginning --bootstrap-server localhost:9092
 
 # 一个简单的web UI监控服务
 docker run --net=host \

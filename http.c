@@ -69,10 +69,8 @@ int http_send(const char *body, size_t length) {
         printf("数据发送失败");
         return -1;
     }
-    free(header);
-
+    
     int ri = 0, n = 0;
-    // char *rbuf = malloc(1024);
     if(g_read_buf == NULL) {
         g_read_buf = malloc(READ_BUF_SIZE);
     }
