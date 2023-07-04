@@ -3,13 +3,68 @@
 #include <stdlib.h>
 #include "soc.h"
 
-// 512
+// 1024
 #define READ_BUF_SIZE 1024
+static char *g_read_buf = NULL;
 
 // 1024 * 1024 + 512
-#define HEADER_BUF_SIZE 1049088 
-static char *g_read_buf = NULL;
+#define HEADER_BUF_SIZE 1049088
 static char *g_header_buf = NULL;
+
+#define BODY_BUF_SIZE 1024 * 1024
+static char *g_body_buf = NULL;
+
+size_t
+strnlen(const char *s, size_t maxlen)
+{
+  const char *p;
+
+  p = memchr(s, '\0', maxlen);
+  if (p == NULL)
+    return maxlen;
+
+  return p - s;
+}
+
+size_t
+strlncat(char *dst, size_t len, const char *src, size_t n)
+{
+  size_t slen;
+  size_t dlen;
+  size_t rlen;
+  size_t ncpy;
+
+  slen = strnlen(src, n);
+  dlen = strnlen(dst, len);
+
+  if (dlen < len) {
+    rlen = len - dlen;
+    ncpy = slen < rlen ? slen : (rlen - 1);
+    memcpy(dst + dlen, src, ncpy);
+    dst[dlen + ncpy] = '\0';
+  }
+
+//   assert(len > slen + dlen);
+  return slen + dlen;
+}
+
+size_t
+strlncpy(char *dst, size_t len, const char *src, size_t n)
+{
+  size_t slen;
+  size_t ncpy;
+
+  slen = strnlen(src, n);
+
+  if (len > 0) {
+    ncpy = slen < len ? slen : (len - 1);
+    memcpy(dst, src, ncpy);
+    dst[ncpy] = '\0';
+  }
+
+//   assert(len > slen);
+  return slen;
+}
 
 int http_send(const char *body, size_t length) {
 
@@ -20,6 +75,15 @@ int http_send(const char *body, size_t length) {
     if(g_header_buf == NULL) {
         g_header_buf = (char *)malloc(HEADER_BUF_SIZE);
     }
+
+    if(g_body_buf == NULL) {
+        g_body_buf = (char *)malloc(BODY_BUF_SIZE);
+    }
+    memset(g_body_buf, 0x0, BODY_BUF_SIZE);
+
+    char des_ip[32] = {0};
+    int des_port = 0;
+    sscanf(body,"%s\r\n%s:%d",g_body_buf, des_ip, &des_port);
 
     memset(g_header_buf, 0x0, HEADER_BUF_SIZE);
     char* header = g_header_buf;
@@ -33,7 +97,7 @@ int http_send(const char *body, size_t length) {
     strcat(header, "Cache-Control: no-cache");
     strcat(header, "\r\n");
 
-    strcat(header, "Connection: Keep-Alive");
+    strcat(header, "Connection: close");
     strcat(header, "\r\n");
 
     strcat(header, "Accept-Encoding: gzip,deflate,br");
@@ -55,12 +119,11 @@ int http_send(const char *body, size_t length) {
     strcat(header, "\r\n");
     strcat(header, "\r\n");
 
-    strcat(header, body);
+    strcat(header, g_body_buf);
     strcat(header, "\r\n");
     strcat(header, "\r\n");
 
-
-    int fd = create_socket("wlp0s20f3", "192.168.2.4", 8989, "127.0.0.1", 80);
+    int fd = create_socket("enp0s31f6", "22.10.133.111", 9291, des_ip, des_port);
     
     // 创建连接
     int result = write(fd, header, strlen(header));
@@ -69,7 +132,7 @@ int http_send(const char *body, size_t length) {
         printf("数据发送失败");
         return -1;
     }
-    
+
     int ri = 0, n = 0;
     if(g_read_buf == NULL) {
         g_read_buf = malloc(READ_BUF_SIZE);

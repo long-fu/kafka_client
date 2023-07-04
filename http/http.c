@@ -86,10 +86,10 @@ static int on_status(http_parser *p, const char *at, size_t length)
     return 0;
 }
 
-//   strlncat(messages[num_messages].body,
-//            sizeof(messages[num_messages].body),
-//            buf,
-//            len);
+  strlncat(messages[num_messages].body,
+           sizeof(messages[num_messages].body),
+           buf,
+           len);
 
 static char* response_buf;
 
