@@ -1,4 +1,10 @@
-int http_send(char *body, size_t length) {
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include "soc.h"
+
+
+int http_send(const char *body, size_t length) {
 
     char *header = (char *)malloc(length + 500);
 
@@ -52,7 +58,7 @@ int http_send(char *body, size_t length) {
 
     int ri = 0, n = 0;
     char *rbuf = malloc(1024);
-    memset(rbuf, 0x0, 512);
+    memset(rbuf, 0x0, 1024);
     // response_buf = read_buf;
 
     while ((n = read(fd, rbuf, 1024)) > 0)
@@ -67,5 +73,5 @@ int http_send(char *body, size_t length) {
     printf("释放资源\n");
     free(rbuf);
     destroy_socket(fd);
-
+    return 0;
 }

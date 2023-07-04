@@ -143,11 +143,9 @@ int create_socket(const char *ethx, const char *src_ip, int src_port, const char
 
     int fd = 0;
     struct ip_mreq ipmr;
-    // char ip[IP_SIZE];
+  
     int ret = -1;
-    // char chrUDP[124] = {"1234567890abcdefghijklmnopqrstuvwxyz"};
-    // char dev_name[100] = {0};
-    // int len;
+
 
     // 初始化能力集
     caps = cap_get_proc();
