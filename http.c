@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+
 #include "soc.h"
 
 // 1024
@@ -8,115 +9,120 @@
 static char *g_read_buf = NULL;
 
 // 1024 * 1024 + 512 284,555 1,049,088
-#define HEADER_BUF_SIZE 1024 * 1024 * 1
+#define HEADER_BUF_SIZE 1049088
 static char *g_header_buf = NULL;
-
-//1,048,576 284,555
-// #define BODY_BUF_SIZE 1024 * 1024 * 2
-// static char *g_body_buf = NULL;
 
 size_t
 strnlen(const char *s, size_t maxlen)
 {
-  const char *p;
+    const char *p;
 
-  p = memchr(s, '\0', maxlen);
-  if (p == NULL)
-    return maxlen;
+    p = memchr(s, '\0', maxlen);
+    if (p == NULL)
+        return maxlen;
 
-  return p - s;
+    return p - s;
 }
 
 size_t
 strlncat(char *dst, size_t len, const char *src, size_t n)
 {
-  size_t slen;
-  size_t dlen;
-  size_t rlen;
-  size_t ncpy;
+    size_t slen;
+    size_t dlen;
+    size_t rlen;
+    size_t ncpy;
 
-  slen = strnlen(src, n);
-  dlen = strnlen(dst, len);
+    slen = strnlen(src, n);
+    dlen = strnlen(dst, len);
 
-  if (dlen < len) {
-    rlen = len - dlen;
-    ncpy = slen < rlen ? slen : (rlen - 1);
-    memcpy(dst + dlen, src, ncpy);
-    dst[dlen + ncpy] = '\0';
-  }
+    if (dlen < len)
+    {
+        rlen = len - dlen;
+        ncpy = slen < rlen ? slen : (rlen - 1);
+        memcpy(dst + dlen, src, ncpy);
+        dst[dlen + ncpy] = '\0';
+    }
 
-//   assert(len > slen + dlen);
-  return slen + dlen;
+    //   assert(len > slen + dlen);
+    return slen + dlen;
 }
 
 size_t
 strlncpy(char *dst, size_t len, const char *src, size_t n)
 {
-  size_t slen;
-  size_t ncpy;
+    size_t slen;
+    size_t ncpy;
 
-  slen = strnlen(src, n);
+    slen = strnlen(src, n);
 
-  if (len > 0) {
-    ncpy = slen < len ? slen : (len - 1);
-    memcpy(dst, src, ncpy);
-    dst[ncpy] = '\0';
-  }
+    if (len > 0)
+    {
+        ncpy = slen < len ? slen : (len - 1);
+        memcpy(dst, src, ncpy);
+        dst[ncpy] = '\0';
+    }
 
-//   assert(len > slen);
-  return slen;
+    //   assert(len > slen);
+    return slen;
 }
 
-int http_send(const char *body, size_t length) {
+int http_send(const char *body, size_t length)
+{
 
-    if (body == NULL || length == 0) {
+    if (body == NULL || length == 0)
+    {
         return 0;
     }
 
-    if(g_header_buf == NULL) {
+    if (g_header_buf == NULL)
+    {
         g_header_buf = (char *)malloc(HEADER_BUF_SIZE);
     }
- 
+
     char *body_buf = NULL;
     char *des_ip = NULL;
     char *temp_port = NULL;
 
     int des_port = 0;
 
-    body_buf = strtok((char*)body, "\r\n");
-    printf("temp body[%d]\n",strlen(body_buf));
-    if(body == NULL) {
+    body_buf = strtok((char *)body, "\r\n");
+    printf("temp body[%ld]\n", strlen(body_buf));
+    if (body == NULL)
+    {
         printf("消息解析错误 body_buf\n");
         return -1;
     }
-    
+
     des_ip = strtok(NULL, "\r\n");
-    if(des_ip == NULL) {
+    if (des_ip == NULL)
+    {
         printf("消息解析错误 des_ip\n");
         return -1;
     }
 
     temp_port = strtok(NULL, "\r\n");
-    if(temp_port == NULL) {
+    if (temp_port == NULL)
+    {
         printf("消息解析错误 temp_port\n");
         return -1;
     }
 
     des_port = atoi(temp_port);
-    if(des_port == 0) {
+    if (des_port == 0)
+    {
         printf("des_port == 0\n");
         return -1;
     }
 
     memset(g_header_buf, 0x0, HEADER_BUF_SIZE);
-    
-    printf("msg body [%d]\n", strlen(body_buf));
-    printf("host %s:%d \n", des_ip,des_port);
 
-    char* header = g_header_buf;
+    printf("msg body [%ld]\n", strlen(body_buf));
+    printf("host %s:%d \n", des_ip, des_port);
+
+    char *header = g_header_buf;
 
     char cl[32] = {0};
-    sprintf(cl,"Content-Length: %ld", length);
+    sprintf(cl, "Content-Length: %ld", length);
 
     strcat(header, "POST /api/smartbox/AlarmPost HTTP/1.1");
     strcat(header, "\r\n");
@@ -150,25 +156,32 @@ int http_send(const char *body, size_t length) {
     strcat(header, "\r\n");
     strcat(header, "\r\n");
 
-    int fd = create_socket("enp0s31f6", "22.10.133.111", 9291, des_ip, des_port);
-    if (fd < 0) {
+    struct sockaddr_in *dest_addr;
+
+    int fd = socket_create("enp0s31f6", "22.10.133.111", 9291, des_ip, des_port, dest_addr);
+    if (fd < 0)
+    {
         printf("soc 创建失败\n");
         return -1;
     }
-    // 创建连接
+
+    
     int result = write(fd, header, strlen(header));
     if (result != strlen(header))
     {
         printf("数据发送失败\n");
         return -1;
-    } else {
+    }
+    else
+    {
         printf("数据发送成功\n");
     }
 
     int ri = 0, n = 0;
-    
-    if(g_read_buf == NULL) {
-        g_read_buf = (char*)malloc(READ_BUF_SIZE);
+
+    if (g_read_buf == NULL)
+    {
+        g_read_buf = (char *)malloc(READ_BUF_SIZE);
     }
 
     memset(g_read_buf, 0x0, READ_BUF_SIZE);
@@ -181,11 +194,11 @@ int http_send(const char *body, size_t length) {
         // printf("接收[%d]=========\n",ri);
         // printf("%s\n",temp);
         strlncat(g_read_buf, strlen(g_read_buf), temp, n);
-        memset(temp,0x0, 512);
+        memset(temp, 0x0, 512);
     }
     printf("接收的消息 %s \n", g_read_buf);
     // TODO: 解析接收的消息
     printf("释放资源\n");
-    destroy_socket(fd);
+    socket_destroy(fd, dest_addr);
     return 0;
 }
