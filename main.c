@@ -8,8 +8,9 @@ int http_send(const char *body, size_t length);
 // char g_body_buf[1024*2048*3] = {0}; 
 int main(int argc, char const *argv[])
 {       
-
-        // char msg[] = "nihao\r\n127.0.0.1\r\n8080";
+        // char helo[] = "1.2.3.4";
+        // char *ret = strstr(helo, ".");
+        // char msg[] = "{\"hello\":\"nihao\"}\r\n127.0.0.1\r\n8080";
         // return http_send(msg,strlen(msg));
         // struct sockaddr_in addre;
         // printf("%d\n",sizeof(addre));
