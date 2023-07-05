@@ -166,12 +166,15 @@ int http_send(const char *body, size_t length) {
     }
 
     int ri = 0, n = 0;
+    
     if(g_read_buf == NULL) {
         g_read_buf = (char*)malloc(READ_BUF_SIZE);
     }
+
     memset(g_read_buf, 0x0, READ_BUF_SIZE);
 
     char temp[512] = {0};
+
     while ((n = read(fd, temp, 512)) > 0)
     {
         // 接收的数据很小

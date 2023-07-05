@@ -16,130 +16,130 @@
 #include <sys/types.h>
 #include <sys/capability.h>
 
-#define MAC_SIZE 18
-#define IP_SIZE 16
+// #define MAC_SIZE 18
+// #define IP_SIZE 16
 
-// 获取本机mac
-int get_local_mac(const char *eth_inf, char *mac)
-{
-  struct ifreq ifr;
-  int sd;
+// // 获取本机mac
+// int get_local_mac(const char *eth_inf, char *mac)
+// {
+//   struct ifreq ifr;
+//   int sd;
 
-  bzero(&ifr, sizeof(struct ifreq));
-  if ((sd = socket(AF_INET, SOCK_STREAM, 0)) < 0)
-  {
-    printf("get %s mac address socket creat error\n", eth_inf);
-    return -1;
-  }
+//   bzero(&ifr, sizeof(struct ifreq));
+//   if ((sd = socket(AF_INET, SOCK_STREAM, 0)) < 0)
+//   {
+//     printf("get %s mac address socket creat error\n", eth_inf);
+//     return -1;
+//   }
 
-  strncpy(ifr.ifr_name, eth_inf, sizeof(ifr.ifr_name) - 1);
+//   strncpy(ifr.ifr_name, eth_inf, sizeof(ifr.ifr_name) - 1);
 
-  if (ioctl(sd, SIOCGIFHWADDR, &ifr) < 0)
-  {
-    printf("get %s mac address error\n", eth_inf);
-    close(sd);
-    return -1;
-  }
+//   if (ioctl(sd, SIOCGIFHWADDR, &ifr) < 0)
+//   {
+//     printf("get %s mac address error\n", eth_inf);
+//     close(sd);
+//     return -1;
+//   }
 
-  snprintf(mac, MAC_SIZE, "%02x:%02x:%02x:%02x:%02x:%02x",
-           (unsigned char)ifr.ifr_hwaddr.sa_data[0],
-           (unsigned char)ifr.ifr_hwaddr.sa_data[1],
-           (unsigned char)ifr.ifr_hwaddr.sa_data[2],
-           (unsigned char)ifr.ifr_hwaddr.sa_data[3],
-           (unsigned char)ifr.ifr_hwaddr.sa_data[4],
-           (unsigned char)ifr.ifr_hwaddr.sa_data[5]);
+//   snprintf(mac, MAC_SIZE, "%02x:%02x:%02x:%02x:%02x:%02x",
+//            (unsigned char)ifr.ifr_hwaddr.sa_data[0],
+//            (unsigned char)ifr.ifr_hwaddr.sa_data[1],
+//            (unsigned char)ifr.ifr_hwaddr.sa_data[2],
+//            (unsigned char)ifr.ifr_hwaddr.sa_data[3],
+//            (unsigned char)ifr.ifr_hwaddr.sa_data[4],
+//            (unsigned char)ifr.ifr_hwaddr.sa_data[5]);
 
-  close(sd);
+//   close(sd);
 
-  return 0;
-}
+//   return 0;
+// }
 
-// 获取本机ip
-int get_local_ip(const char *eth_inf, char *ip)
-{
-  int sd;
-  struct sockaddr_in sin;
-  struct ifreq ifr;
+// // 获取本机ip
+// int get_local_ip(const char *eth_inf, char *ip)
+// {
+//   int sd;
+//   struct sockaddr_in sin;
+//   struct ifreq ifr;
 
-  sd = socket(AF_INET, SOCK_DGRAM, 0);
-  if (-1 == sd)
-  {
-    printf("socket error: %s\n", strerror(errno));
-    return -1;
-  }
+//   sd = socket(AF_INET, SOCK_DGRAM, 0);
+//   if (-1 == sd)
+//   {
+//     printf("socket error: %s\n", strerror(errno));
+//     return -1;
+//   }
 
-  strncpy(ifr.ifr_name, eth_inf, IFNAMSIZ);
-  ifr.ifr_name[IFNAMSIZ - 1] = 0;
+//   strncpy(ifr.ifr_name, eth_inf, IFNAMSIZ);
+//   ifr.ifr_name[IFNAMSIZ - 1] = 0;
 
-  // if error: No such device
-  if (ioctl(sd, SIOCGIFADDR, &ifr) < 0)
-  {
-    printf("ioctl error: %s\n", strerror(errno));
-    close(sd);
-    return -1;
-  }
+//   // if error: No such device
+//   if (ioctl(sd, SIOCGIFADDR, &ifr) < 0)
+//   {
+//     printf("ioctl error: %s\n", strerror(errno));
+//     close(sd);
+//     return -1;
+//   }
 
-  memcpy(&sin, &ifr.ifr_addr, sizeof(sin));
-  snprintf(ip, IP_SIZE, "%s", inet_ntoa(sin.sin_addr));
+//   memcpy(&sin, &ifr.ifr_addr, sizeof(sin));
+//   snprintf(ip, IP_SIZE, "%s", inet_ntoa(sin.sin_addr));
 
-  close(sd);
-  return 0;
-}
+//   close(sd);
+//   return 0;
+// }
 
-// 获取本机网卡名称
-int get_local_dev(char *eth_name, const char *ip)
-{
+// // 获取本机网卡名称
+// int get_local_dev(char *eth_name, const char *ip)
+// {
 
-  int sock;
-  struct sockaddr_in sin;
-  struct ifreq ifr;
-  struct ifconf ifc;
-  char *buf = (char *)malloc(1024);
-  memset(buf, 0x0, 1024);
-  //   char buf[10240];
-  int i;
+//   int sock;
+//   struct sockaddr_in sin;
+//   struct ifreq ifr;
+//   struct ifconf ifc;
+//   char *buf = (char *)malloc(1024);
+//   memset(buf, 0x0, 1024);
+//   //   char buf[10240];
+//   int i;
 
-  // 创建一个套接字
-  sock = socket(AF_INET, SOCK_DGRAM, 0);
-  if (sock == -1)
-  {
-    perror("socket error");
-    return -1;
-  }
-  // 获取系统中所有网卡的信息
-  ifc.ifc_len = 1024;
-  ifc.ifc_buf = buf;
-  if (ioctl(sock, SIOCGIFCONF, &ifc) < 0)
-  {
-    perror("ioctl error");
-    return -1;
-  }
+//   // 创建一个套接字
+//   sock = socket(AF_INET, SOCK_DGRAM, 0);
+//   if (sock == -1)
+//   {
+//     perror("socket error");
+//     return -1;
+//   }
+//   // 获取系统中所有网卡的信息
+//   ifc.ifc_len = 1024;
+//   ifc.ifc_buf = buf;
+//   if (ioctl(sock, SIOCGIFCONF, &ifc) < 0)
+//   {
+//     perror("ioctl error");
+//     return -1;
+//   }
 
-  // 遍历所有网卡，获取每个网卡的 IP 地址
-  for (i = 0; i < ifc.ifc_len;)
-  {
-    struct ifreq *pifr = (struct ifreq *)(buf + i);
+//   // 遍历所有网卡，获取每个网卡的 IP 地址
+//   for (i = 0; i < ifc.ifc_len;)
+//   {
+//     struct ifreq *pifr = (struct ifreq *)(buf + i);
 
-    // 调用 ioctl 函数获取网卡 IP 地址
-    if (ioctl(sock, SIOCGIFADDR, pifr) < 0)
-    {
-      perror("ioctl error");
-      return -1;
-    }
+//     // 调用 ioctl 函数获取网卡 IP 地址
+//     if (ioctl(sock, SIOCGIFADDR, pifr) < 0)
+//     {
+//       perror("ioctl error");
+//       return -1;
+//     }
 
-    // 如果网卡 IP 地址与输入的 IP 地址相同，则该网卡就是输入的 IP 地址对应的
-    if (strcmp(inet_ntoa(((struct sockaddr_in *)&pifr->ifr_addr)->sin_addr), ip) == 0)
-    {
-      strcpy(eth_name, pifr->ifr_name);
-      break;
-    }
-    // 移动指针到下一个网卡
-    i += sizeof(struct ifreq);
-  }
-  free(buf);
-  close(sock);
-  return 0;
-}
+//     // 如果网卡 IP 地址与输入的 IP 地址相同，则该网卡就是输入的 IP 地址对应的
+//     if (strcmp(inet_ntoa(((struct sockaddr_in *)&pifr->ifr_addr)->sin_addr), ip) == 0)
+//     {
+//       strcpy(eth_name, pifr->ifr_name);
+//       break;
+//     }
+//     // 移动指针到下一个网卡
+//     i += sizeof(struct ifreq);
+//   }
+//   free(buf);
+//   close(sock);
+//   return 0;
+// }
 
 int create_socket(const char *ethx, const char *src_ip, int src_port, const char *dest_ip, int dest_port)
 {
@@ -154,37 +154,6 @@ int create_socket(const char *ethx, const char *src_ip, int src_port, const char
 
   int fd = 0;
   int ret = -1;
-
-  // 初始化能力集
-  // caps = cap_get_proc();
-  // if (caps == NULL)
-  // {
-  //   printf("cap_get_proc\n");
-  //   return -1;
-  // }
-
-  // // 设置 CAP_NET_RAW 和 CAP_NET_BIND_SERVICE 权限
-  // cap_list[0] = CAP_NET_RAW;
-  // cap_list[1] = CAP_NET_BIND_SERVICE;
-  // if (cap_set_flag(caps, CAP_PERMITTED, 2, cap_list, CAP_SET) < 0)
-  // {
-  //   printf("cap_set_flag\n");
-  //   return -1;
-  // }
-  // if (cap_set_flag(caps, CAP_EFFECTIVE, 2, cap_list, CAP_SET) < 0)
-  // {
-  //   printf("cap_set_flag\n");
-  //   return -1;
-  // }
-
-  // // 设置能力集
-  // if (cap_set_proc(caps) < 0)
-  // {
-  //   printf("cap_set_proc\n");
-  //   return -1;
-  // }
-
-  // cap_free(caps);
 
   if ((fd = socket(AF_INET, SOCK_STREAM, 0)) < 0)
   {
@@ -219,10 +188,10 @@ int create_socket(const char *ethx, const char *src_ip, int src_port, const char
     printf("bind interface success \r\n");
   }
 
-  memset(&dest_addr, 0, sizeof(dest_addr));
-  dest_addr.sin_family = AF_INET;
-  dest_addr.sin_addr.s_addr = inet_addr(dest_ip);
-  dest_addr.sin_port = htons(dest_port);
+  
+  dest_addr->sin_family = AF_INET;
+  dest_addr->sin_addr.s_addr = inet_addr(dest_ip);
+  dest_addr->sin_port = htons(dest_port);
 
   if ((fd = socket(AF_INET, SOCK_STREAM, 0)) < 0)
   {
@@ -230,14 +199,14 @@ int create_socket(const char *ethx, const char *src_ip, int src_port, const char
     return -1;
   }
 
-  if (inet_pton(AF_INET, dest_ip, &dest_addr.sin_addr) <= 0)
+  if (inet_pton(AF_INET, dest_ip, dest_addr->sin_addr) <= 0)
   {
     printf("2.inet 网络连接失败,本线程即将终止[inet_pton error]错误代码是%d, 错误信息是'%s'\n", errno, strerror(errno));
     close(fd);
     return -1;
   }
 
-  if (connect(fd, (struct sockaddr *)&dest_addr, sizeof(dest_addr)) < 0)
+  if (connect(fd, (struct sockaddr *)dest_addr, sizeof(struct sockaddr_in)) < 0)
   {
     printf("3.connect 服务器失败[connect error]错误代码是%d, 错误信息是'%s'\n", errno, strerror(errno));
     close(fd);
@@ -251,7 +220,8 @@ int create_socket(const char *ethx, const char *src_ip, int src_port, const char
   return fd;
 }
 
-int destroy_socket(int fd)
+int destroy_socket(int fd,struct sockaddr_in *addr)
 {
+  setsockopt(fd, IPPROTO_IP, IP_DROP_MEMBERSHIP, addr, sizeof(struct sockaddr_in));
   close(fd);
 }
