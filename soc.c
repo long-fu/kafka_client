@@ -159,7 +159,7 @@ int create_socket(const char *ethx, const char *src_ip, int src_port, const char
   caps = cap_get_proc();
   if (caps == NULL)
   {
-    printf("cap_get_proc");
+    printf("cap_get_proc\n");
     return -1;
   }
 
@@ -168,19 +168,19 @@ int create_socket(const char *ethx, const char *src_ip, int src_port, const char
   cap_list[1] = CAP_NET_BIND_SERVICE;
   if (cap_set_flag(caps, CAP_PERMITTED, 2, cap_list, CAP_SET) < 0)
   {
-    printf("cap_set_flag");
+    printf("cap_set_flag\n");
     return -1;
   }
   if (cap_set_flag(caps, CAP_EFFECTIVE, 2, cap_list, CAP_SET) < 0)
   {
-    printf("cap_set_flag");
+    printf("cap_set_flag\n");
     return -1;
   }
 
   // 设置能力集
   if (cap_set_proc(caps) < 0)
   {
-    printf("cap_set_proc");
+    printf("cap_set_proc\n");
     return -1;
   }
 
@@ -188,7 +188,7 @@ int create_socket(const char *ethx, const char *src_ip, int src_port, const char
 
   if ((fd = socket(AF_INET, SOCK_STREAM, 0)) < 0)
   {
-    perror("create socket failed!");
+    perror("create socket failed!\n");
     return -1;
   }
 
@@ -201,7 +201,7 @@ int create_socket(const char *ethx, const char *src_ip, int src_port, const char
   ret = bind(fd, (struct sockaddr *)&src_addr, sizeof(src_addr));
   if (ret < 0)
   {
-    printf("bind error!!!");
+    printf("bind error!!!\n");
     close(fd);
     return -1;
   }

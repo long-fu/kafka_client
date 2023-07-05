@@ -86,7 +86,7 @@ int http_send(const char *body, size_t length) {
     sscanf(body,"%s\r\n%s:%d",g_body_buf, des_ip, &des_port);
 
     memset(g_header_buf, 0x0, HEADER_BUF_SIZE);
-    
+
     char* header = g_header_buf;
 
     char cl[32] = {0};
@@ -125,12 +125,15 @@ int http_send(const char *body, size_t length) {
     strcat(header, "\r\n");
 
     int fd = create_socket("enp0s31f6", "22.10.133.111", 9291, des_ip, des_port);
-    
+    if (fd < 0) {
+        printf("soc 创建失败\n");
+        return -1;
+    }
     // 创建连接
     int result = write(fd, header, strlen(header));
     if (result != strlen(header))
     {
-        printf("数据发送失败");
+        printf("数据发送失败\n");
         return -1;
     }
 
