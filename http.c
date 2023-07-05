@@ -72,24 +72,26 @@ int http_send(const char *body, size_t length) {
         return 0;
     }
 
+    printf("内存分配0\n");
     if(g_header_buf == NULL) {
         g_header_buf = (char *)malloc(HEADER_BUF_SIZE);
     }
-
+    printf("内存分配1\n");
     if(g_body_buf == NULL) {
         g_body_buf = (char *)malloc(BODY_BUF_SIZE);
     }
+    printf("内存分配2\n");
     memset(g_body_buf, 0x0, BODY_BUF_SIZE);
 
     char des_ip[32] = {0};
     int des_port = 0;
     sscanf(body,"%s\r\n%s:%d",g_body_buf, des_ip, &des_port);
-
+    printf("内存分配3\n");
     memset(g_header_buf, 0x0, HEADER_BUF_SIZE);
-
+    printf("内存分配4\n");
     printf("msg body %s\n", g_body_buf);
     printf("host %s:%d \n", des_ip,des_port);
-
+    printf("内存分配5\n");
     char* header = g_header_buf;
 
     char cl[32] = {0};
