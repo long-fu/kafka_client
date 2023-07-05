@@ -8,11 +8,11 @@
 static char *g_read_buf = NULL;
 
 // 1024 * 1024 + 512 284,555 1,049,088
-#define HEADER_BUF_SIZE 1049088
+#define HEADER_BUF_SIZE 1024 * 1024 * 2
 static char *g_header_buf = NULL;
 
 //1,048,576 284,555
-#define BODY_BUF_SIZE 1048576
+#define BODY_BUF_SIZE 1024 * 1024 * 2
 static char *g_body_buf = NULL;
 
 size_t
@@ -81,7 +81,7 @@ int http_send(const char *body, size_t length) {
     if(g_body_buf == NULL) {
         g_body_buf = (char *)malloc(BODY_BUF_SIZE);
     }
-    
+
     printf("内存分配2\n");
     memset(g_body_buf, 0x0, BODY_BUF_SIZE);
 
