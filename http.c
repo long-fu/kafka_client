@@ -170,14 +170,10 @@ int http_send(const char *body, size_t length)
     sprintf(g_body_buf, "{\"CameraName\":\"%s\",\"SiteData\":{\"Latitude\":\"16.24463,44.179439\",\"Longitude\":\"001\",\"Name\":\"001\"},\"ChannelName\":\"\",\"AlarmTime\":\"%s\",\"AlgCode\":\"%s\",\"DeviceId\":\"%s\",\"AlarmBoxs\":[{\"X\":1236,\"Y\":545,\"Height\":529,\"Width\":234},{\"X\":1419,\"Y\":509,\"Height\":337,\"Width\":126},{\"X\":1203,\"Y\":545,\"Height\":388,\"Width\":123}],\"AlarmExtension\":\"%s\",\"ChannelId\":\"eb5d32\",\"AlarmBase\":\"%s\"}",
             cameraName, alarmTime, algCode, deviceId, alarmExtension, alarmBase);
 
-    // printf("")
     printf("msg body [%ld]:%s\n", strlen(g_body_buf), g_body_buf);
     printf("host %s:%d \n", des_ip, des_port);
 
     char *header = g_header_buf;
-
-    char cl[32] = {0};
-    sprintf(cl, "%ld", strlen(g_body_buf));
 
     strcat(header, "POST /api/smartbox/AlarmPost HTTP/1.1\r\n");
     strcat(header, "Cache-Control:no-cache\r\n");
@@ -188,6 +184,10 @@ int http_send(const char *body, size_t length)
     strcat(header, "User-Agent:Mozilla/5.0\r\n");
     strcat(header, "host:192.168.137.220\r\n");
     strcat(header, "Content-Length:");
+    
+    char cl[32] = {0};
+    sprintf(cl, "%ld", strlen(g_body_buf));
+    
     strcat(header, cl);
     strcat(header, "\r\n\r\n");
 
@@ -195,8 +195,6 @@ int http_send(const char *body, size_t length)
     strcat(header, "\r\n\r\n");
 
     struct sockaddr_in *dest_addr;
-
-    printf("mesgbodu\n%s\n", header);
 
     int fd = socket_create("wlp0s20f3", "192.168.2.4", 7890, des_ip, des_port, dest_addr);
 
