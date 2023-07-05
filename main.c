@@ -4,7 +4,7 @@
 
 int consumer(const char *brokers, const char *groupid, char **topics, int topic_cnt);
 
-char g_body_buf[1024*2048*3] = {0}; 
+// char g_body_buf[1024*2048*3] = {0}; 
 int main(int argc, char const *argv[])
 {
         // char body[] = "你好\r\n192.168.2.1\r\n8080";
