@@ -86,7 +86,7 @@ int http_send(const char *body, size_t length)
     int des_port = 0;
 
     body_buf = strtok((char *)body, "\r\n");
-    printf("temp body[%ld]\n", strlen(body_buf));
+    // printf("temp body[%ld]\n", strlen(body_buf));
     if (body == NULL)
     {
         printf("消息解析错误 body_buf\n");
@@ -158,7 +158,7 @@ int http_send(const char *body, size_t length)
 
     struct sockaddr_in *dest_addr;
     
-    printf("mesgbodu \n %s\n", header);
+    // printf("mesgbodu \n %s\n", header);
 
     int fd = socket_create("wlp0s20f3", "192.168.2.4", 7890, des_ip, des_port, dest_addr);
     if (fd < 0)
@@ -167,6 +167,7 @@ int http_send(const char *body, size_t length)
         return -1;
     }
 
+    printf("http buf[%ld]\n",strlen(header));
     
     int result = write(fd, header, strlen(header));
     if (result != strlen(header))
@@ -194,7 +195,7 @@ int http_send(const char *body, size_t length)
     {
         // 接收的数据很小
         // printf("接收[%d]=========\n",ri);
-        printf("%s\n",temp);
+        // printf("%s\n",temp);
         // strlncat(g_read_buf, strlen(g_read_buf), temp, n);
         // memset(temp, 0x0, 512);
     }
