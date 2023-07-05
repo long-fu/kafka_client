@@ -162,21 +162,22 @@ int http_send(const char *body, size_t length)
         printf("des_port == 0\n");
         return -1;
     }
-    
+
     memset(g_header_buf, 0x0, HEADER_BUF_SIZE);
-    
+
     memset(g_body_buf, 0x0, BODY_BUF_SIZE);
 
     sprintf(g_body_buf, "{\"CameraName\":\"%s\",\"SiteData\":{\"Latitude\":\"16.24463,44.179439\",\"Longitude\":\"001\",\"Name\":\"001\"},\"ChannelName\":\"\",\"AlarmTime\":\"%s\",\"AlgCode\":\"%s\",\"DeviceId\":\"%s\",\"AlarmBoxs\":[{\"X\":1236,\"Y\":545,\"Height\":529,\"Width\":234},{\"X\":1419,\"Y\":509,\"Height\":337,\"Width\":126},{\"X\":1203,\"Y\":545,\"Height\":388,\"Width\":123}],\"AlarmExtension\":\"%s\",\"ChannelId\":\"eb5d32\",\"AlarmBase\":\"%s\"}",
-            cameraName, alarmTime, algCode, deviceId,alarmExtension, alarmBase);
+            cameraName, alarmTime, algCode, deviceId, alarmExtension, alarmBase);
 
-    // printf("msg body [%ld]:%s\n", strlen(body_buf), body_buf);
+    // printf("")
+    printf("msg body [%ld]:%s\n", strlen(g_body_buf), g_body_buf);
     printf("host %s:%d \n", des_ip, des_port);
 
     char *header = g_header_buf;
 
     char cl[32] = {0};
-    sprintf(cl, "Content-Length: %ld", length);
+    sprintf(cl, "Content-Length: %ld", strlen(g_body_buf));
 
     strcat(header, "POST /api/smartbox/AlarmPost HTTP/1.1");
     strcat(header, "\r\n");
@@ -236,24 +237,26 @@ int http_send(const char *body, size_t length)
 
     int ri = 0, n = 0;
 
-    // if (g_read_buf == NULL)
-    // {
-    //     g_read_buf = (char *)malloc(READ_BUF_SIZE);
-    // }
+    if (g_read_buf == NULL)
+    {
+        g_read_buf = (char *)malloc(READ_BUF_SIZE);
+    }
 
-    // memset(g_read_buf, 0x0, READ_BUF_SIZE);
+    memset(g_read_buf, 0x0, READ_BUF_SIZE);
 
     char temp[512] = {0};
-
-    while ((n = read(fd, temp, 512)) > 0)
-    {
-        // 接收的数据很小
-        printf("接收[%d]=========\n", ri);
-        printf("%s\n", temp);
-        // strlncat(g_read_buf, strlen(g_read_buf), temp, n);
-        // memset(temp, 0x0, 512);
-    }
+    read(fd, temp, 512);
     printf("接收的消息 %s \n", temp);
+    
+    // while ((n = read(fd, temp, 512)) > 0)
+    // {
+    //     // 接收的数据很小
+    //     printf("接收[%d]=========%d\n", ri,n);
+    //     printf("%s\n", temp);
+    //     strlncat(g_read_buf, strlen(g_read_buf), temp, strlen(temp));
+    //     memset(temp, 0x0, 512);
+    // }
+    // printf("接收的消息 %s \n", g_read_buf);
     // TODO: 解析接收的消息
     // printf("释放资源\n");
     socket_destroy(fd, dest_addr);
