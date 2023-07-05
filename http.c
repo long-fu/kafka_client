@@ -87,6 +87,9 @@ int http_send(const char *body, size_t length) {
 
     memset(g_header_buf, 0x0, HEADER_BUF_SIZE);
 
+    printf("msg body %s\n", g_body_buf);
+    printf("host %s:%d \n", des_ip,des_port);
+
     char* header = g_header_buf;
 
     char cl[32] = {0};
