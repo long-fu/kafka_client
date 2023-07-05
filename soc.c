@@ -161,8 +161,11 @@ int create_socket(const char *ethx, const char *src_ip, int src_port, const char
     return -1;
   }
 
+  // memset(&src_addr, 0, sizeof(src_addr));
+  // memset(&src_addr, 0, sizeof(src_addr));
+
   inet_pton(AF_INET, src_ip, &src_addr.sin_addr.s_addr);
-  memset(&src_addr, 0, sizeof(src_addr));
+  
   src_addr.sin_family = AF_INET;
   src_addr.sin_port = htons(src_port);
   src_addr.sin_addr.s_addr = inet_addr(src_ip);
@@ -189,9 +192,9 @@ int create_socket(const char *ethx, const char *src_ip, int src_port, const char
   }
 
   
-  dest_addr->sin_family = AF_INET;
-  dest_addr->sin_addr.s_addr = inet_addr(dest_ip);
-  dest_addr->sin_port = htons(dest_port);
+  dest_addr.sin_family = AF_INET;
+  dest_addr.sin_addr.s_addr = inet_addr(dest_ip);
+  dest_addr.sin_port = htons(dest_port);
 
   if ((fd = socket(AF_INET, SOCK_STREAM, 0)) < 0)
   {
@@ -199,14 +202,14 @@ int create_socket(const char *ethx, const char *src_ip, int src_port, const char
     return -1;
   }
 
-  if (inet_pton(AF_INET, dest_ip, dest_addr->sin_addr) <= 0)
+  if (inet_pton(AF_INET, dest_ip, &dest_addr.sin_addr) <= 0)
   {
     printf("2.inet 网络连接失败,本线程即将终止[inet_pton error]错误代码是%d, 错误信息是'%s'\n", errno, strerror(errno));
     close(fd);
     return -1;
   }
 
-  if (connect(fd, (struct sockaddr *)dest_addr, sizeof(struct sockaddr_in)) < 0)
+  if (connect(fd, &dest_addr, sizeof(dest_addr)) < 0)
   {
     printf("3.connect 服务器失败[connect error]错误代码是%d, 错误信息是'%s'\n", errno, strerror(errno));
     close(fd);
