@@ -1,12 +1,15 @@
 #include <stdio.h>
 #include <string.h>
-
+#include <netinet/in.h>
 
 int consumer(const char *brokers, const char *groupid, char **topics, int topic_cnt);
 
 // char g_body_buf[1024*2048*3] = {0}; 
 int main(int argc, char const *argv[])
-{
+{       
+        // struct sockaddr_in addre;
+        // printf("%d\n",sizeof(addre));
+        // return 0;
         // char body[] = "你好\r\n192.168.2.1\r\n8080";
         // char *body,*ip,*port;
         // body = strtok((char*)g_body, "\r\n");

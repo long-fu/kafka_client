@@ -107,19 +107,22 @@ int socket_create(const char *ethx, const char *src_ip, int src_port, const char
   if ((fd = socket(AF_INET, SOCK_STREAM, 0)) < 0)
   {
     printf("1.socket 网络连接失败,本线程即将终止[socket error]错误代码是%d, 错误信息是'%s'\n", errno, strerror(errno));
+    setsockopt(fd, IPPROTO_IP, IP_DROP_MEMBERSHIP, dest_addr, sizeof(struct sockaddr_in));
     return -1;
   }
 
   if (inet_pton(AF_INET, dest_ip, &dest_addr->sin_addr) <= 0)
   {
     printf("2.inet 网络连接失败,本线程即将终止[inet_pton error]错误代码是%d, 错误信息是'%s'\n", errno, strerror(errno));
+    setsockopt(fd, IPPROTO_IP, IP_DROP_MEMBERSHIP, dest_addr, sizeof(struct sockaddr_in));
     close(fd);
     return -1;
   }
 
-  if (connect(fd, dest_addr, sizeof(dest_addr)) < 0)
+  if (connect(fd, dest_addr, sizeof(struct sockaddr_in)) < 0)
   {
     printf("3.connect 服务器失败[connect error]错误代码是%d, 错误信息是'%s'\n", errno, strerror(errno));
+    setsockopt(fd, IPPROTO_IP, IP_DROP_MEMBERSHIP, dest_addr, sizeof(struct sockaddr_in));
     close(fd);
     return -1;
   }
