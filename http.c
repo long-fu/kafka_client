@@ -7,11 +7,12 @@
 #define READ_BUF_SIZE 1024
 static char *g_read_buf = NULL;
 
-// 1024 * 1024 + 512
+// 1024 * 1024 + 512 284,555 1,049,088
 #define HEADER_BUF_SIZE 1049088
 static char *g_header_buf = NULL;
 
-#define BODY_BUF_SIZE 1024 * 1024
+//1,048,576 284,555
+#define BODY_BUF_SIZE 1048576
 static char *g_body_buf = NULL;
 
 size_t
@@ -85,7 +86,9 @@ int http_send(const char *body, size_t length) {
 
     char des_ip[32] = {0};
     int des_port = 0;
+    printf("内存分配21\n");
     sscanf(body,"%s\r\n%s:%d",g_body_buf, des_ip, &des_port);
+    
     printf("内存分配3\n");
     memset(g_header_buf, 0x0, HEADER_BUF_SIZE);
     printf("内存分配4\n");
