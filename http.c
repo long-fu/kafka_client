@@ -81,14 +81,18 @@ int http_send(const char *body, size_t length) {
     if(g_body_buf == NULL) {
         g_body_buf = (char *)malloc(BODY_BUF_SIZE);
     }
+    
     printf("内存分配2\n");
     memset(g_body_buf, 0x0, BODY_BUF_SIZE);
 
     char des_ip[32] = {0};
+    char temp_port[8] = {0};
     int des_port = 0;
+
     printf("内存分配21\n");
-    sscanf(body,"%s\r\n%s:%d",g_body_buf, des_ip, &des_port);
-    
+    sscanf(body,"%s\r\n%s\r\n%d",g_body_buf, des_ip, temp_port);
+    des_port = atoi(temp_port);
+
     printf("内存分配3\n");
     memset(g_header_buf, 0x0, HEADER_BUF_SIZE);
     printf("内存分配4\n");
