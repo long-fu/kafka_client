@@ -12,6 +12,9 @@ static char *g_read_buf = NULL;
 #define HEADER_BUF_SIZE 1049088
 static char *g_header_buf = NULL;
 
+#define BODY_BUF_SIZE 1024 * 1024
+static char *g_body_buf = NULL;
+
 size_t
 strnlen(const char *s, size_t maxlen)
 {
@@ -79,17 +82,63 @@ int http_send(const char *body, size_t length)
         g_header_buf = (char *)malloc(HEADER_BUF_SIZE);
     }
 
-    char *body_buf = NULL;
+    if (g_body_buf == NULL)
+    {
+        g_body_buf = (char *)malloc(BODY_BUF_SIZE);
+    }
+
+    char *cameraName = NULL;
+    char *alarmTime = NULL;
+    char *algCode = NULL;
+    char *deviceId = NULL;
+    char *alarmExtension = NULL;
+    char *alarmBase = NULL;
+
     char *des_ip = NULL;
+    int des_port = 0;
     char *temp_port = NULL;
 
-    int des_port = 0;
+    // char *body_buf = NULL;
 
-    body_buf = strtok((char *)body, "\r\n");
-    // printf("temp body[%ld]\n", strlen(body_buf));
-    if (body == NULL)
+    cameraName = strtok((char *)body, "\r\n");
+    if (cameraName == NULL)
     {
-        printf("消息解析错误 body_buf\n");
+        printf("消息解析错误 cameraName\n");
+        return -1;
+    }
+
+    alarmTime = strtok(NULL, "\r\n");
+    if (alarmTime == NULL)
+    {
+        printf("消息解析错误 alarmTime\n");
+        return -1;
+    }
+
+    algCode = strtok(NULL, "\r\n");
+    if (algCode == NULL)
+    {
+        printf("消息解析错误 algCode\n");
+        return -1;
+    }
+
+    deviceId = strtok(NULL, "\r\n");
+    if (deviceId == NULL)
+    {
+        printf("消息解析错误 deviceId\n");
+        return -1;
+    }
+
+    alarmExtension = strtok(NULL, "\r\n");
+    if (alarmExtension == NULL)
+    {
+        printf("消息解析错误 alarmExtension\n");
+        return -1;
+    }
+
+    alarmBase = strtok(NULL, "\r\n");
+    if (alarmBase == NULL)
+    {
+        printf("消息解析错误 alarmBase\n");
         return -1;
     }
 
@@ -113,10 +162,15 @@ int http_send(const char *body, size_t length)
         printf("des_port == 0\n");
         return -1;
     }
-
+    
     memset(g_header_buf, 0x0, HEADER_BUF_SIZE);
+    
+    memset(g_body_buf, 0x0, BODY_BUF_SIZE);
 
-    printf("msg body [%ld]\n", strlen(body_buf));
+    sprintf(g_body_buf, "{\"CameraName\":\"%s\",\"SiteData\":{\"Latitude\":\"16.24463,44.179439\",\"Longitude\":\"001\",\"Name\":\"001\"},\"ChannelName\":\"\",\"AlarmTime\":\"%s\",\"AlgCode\":\"%s\",\"DeviceId\":\"%s\",\"AlarmBoxs\":[{\"X\":1236,\"Y\":545,\"Height\":529,\"Width\":234},{\"X\":1419,\"Y\":509,\"Height\":337,\"Width\":126},{\"X\":1203,\"Y\":545,\"Height\":388,\"Width\":123}],\"AlarmExtension\":\"%s\",\"ChannelId\":\"eb5d32\",\"AlarmBase\":\"%s\"}",
+            cameraName, alarmTime, algCode, deviceId,alarmExtension, alarmBase);
+
+    // printf("msg body [%ld]:%s\n", strlen(body_buf), body_buf);
     printf("host %s:%d \n", des_ip, des_port);
 
     char *header = g_header_buf;
@@ -130,7 +184,7 @@ int http_send(const char *body, size_t length)
     strcat(header, "Cache-Control: no-cache");
     strcat(header, "\r\n");
 
-    strcat(header, "Connection: close");
+    strcat(header, "Connection: keep-alive");
     strcat(header, "\r\n");
 
     strcat(header, "Accept-Encoding: gzip,deflate,br");
@@ -145,30 +199,30 @@ int http_send(const char *body, size_t length)
     strcat(header, "User-Agent: Mozilla/5.0");
     strcat(header, "\r\n");
 
-    strcat(header, "host:22.11.123.78:80\r\n");
-    strcat(header, "\r\n");
+    // strcat(header, "Host: 128.0.0.1\r\n");
 
     strcat(header, cl);
     strcat(header, "\r\n");
     strcat(header, "\r\n");
 
-    strcat(header, body_buf);
+    strcat(header, g_body_buf);
     strcat(header, "\r\n");
     strcat(header, "\r\n");
 
     struct sockaddr_in *dest_addr;
-    
-    // printf("mesgbodu \n %s\n", header);
+
+    // printf("mesgbodu\n%s\n", header);
 
     int fd = socket_create("wlp0s20f3", "192.168.2.4", 7890, des_ip, des_port, dest_addr);
+
     if (fd < 0)
     {
         printf("soc 创建失败\n");
         return -1;
     }
 
-    printf("http buf[%ld]\n",strlen(header));
-    
+    printf("http buf[%ld]\n", strlen(header));
+
     int result = write(fd, header, strlen(header));
     if (result != strlen(header))
     {
@@ -194,8 +248,8 @@ int http_send(const char *body, size_t length)
     while ((n = read(fd, temp, 512)) > 0)
     {
         // 接收的数据很小
-        // printf("接收[%d]=========\n",ri);
-        // printf("%s\n",temp);
+        printf("接收[%d]=========\n", ri);
+        printf("%s\n", temp);
         // strlncat(g_read_buf, strlen(g_read_buf), temp, n);
         // memset(temp, 0x0, 512);
     }
