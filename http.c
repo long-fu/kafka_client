@@ -196,7 +196,7 @@ int http_send(const char *body, size_t length)
         // printf("接收[%d]=========\n",ri);
         printf("%s\n",temp);
         // strlncat(g_read_buf, strlen(g_read_buf), temp, n);
-        memset(temp, 0x0, 512);
+        // memset(temp, 0x0, 512);
     }
     printf("接收的消息 %s \n", temp);
     // TODO: 解析接收的消息
