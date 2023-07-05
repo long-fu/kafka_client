@@ -68,7 +68,7 @@ strlncpy(char *dst, size_t len, const char *src, size_t n)
     //   assert(len > slen);
     return slen;
 }
-
+char body_buf1[1024000] = {0};
 int http_send(const char *body, size_t length)
 {
 
@@ -177,42 +177,26 @@ int http_send(const char *body, size_t length)
     char *header = g_header_buf;
 
     char cl[32] = {0};
-    sprintf(cl, "Content-Length: %ld", strlen(g_body_buf));
+    sprintf(cl, "%ld", strlen(g_body_buf));
 
-    strcat(header, "POST /api/smartbox/AlarmPost HTTP/1.1");
-    strcat(header, "\r\n");
-
-    strcat(header, "Cache-Control: no-cache");
-    strcat(header, "\r\n");
-
-    strcat(header, "Connection: keep-alive");
-    strcat(header, "\r\n");
-
-    strcat(header, "Accept-Encoding: gzip,deflate,br");
-    strcat(header, "\r\n");
-
-    strcat(header, "Accept: */*");
-    strcat(header, "\r\n");
-
-    strcat(header, "Content-Type: application/json");
-    strcat(header, "\r\n");
-
-    strcat(header, "User-Agent: Mozilla/5.0");
-    strcat(header, "\r\n");
-
-    // strcat(header, "Host: 128.0.0.1\r\n");
-
+    strcat(header, "POST /api/smartbox/AlarmPost HTTP/1.1\r\n");
+    strcat(header, "Cache-Control:no-cache\r\n");
+    strcat(header, "Connection:Keep-Alive\r\n");
+    strcat(header, "Accept-Encoding:gzip,deflate,br\r\n");
+    strcat(header, "Accept:*/*\r\n");
+    strcat(header, "Content-Type:application/json\r\n");
+    strcat(header, "User-Agent:Mozilla/5.0\r\n");
+    strcat(header, "host:192.168.137.220\r\n");
+    strcat(header, "Content-Length:");
     strcat(header, cl);
-    strcat(header, "\r\n");
-    strcat(header, "\r\n");
+    strcat(header, "\r\n\r\n");
 
     strcat(header, g_body_buf);
-    strcat(header, "\r\n");
-    strcat(header, "\r\n");
+    strcat(header, "\r\n\r\n");
 
     struct sockaddr_in *dest_addr;
 
-    // printf("mesgbodu\n%s\n", header);
+    printf("mesgbodu\n%s\n", header);
 
     int fd = socket_create("wlp0s20f3", "192.168.2.4", 7890, des_ip, des_port, dest_addr);
 
@@ -245,18 +229,16 @@ int http_send(const char *body, size_t length)
     memset(g_read_buf, 0x0, READ_BUF_SIZE);
 
     char temp[512] = {0};
-    read(fd, temp, 512);
-    printf("接收的消息 %s \n", temp);
-    
-    // while ((n = read(fd, temp, 512)) > 0)
-    // {
-    //     // 接收的数据很小
-    //     printf("接收[%d]=========%d\n", ri,n);
-    //     printf("%s\n", temp);
-    //     strlncat(g_read_buf, strlen(g_read_buf), temp, strlen(temp));
-    //     memset(temp, 0x0, 512);
-    // }
-    // printf("接收的消息 %s \n", g_read_buf);
+
+    while ((n = read(fd, temp, 512)) > 0)
+    {
+        // 接收的数据很小
+        printf("接收[%d]=========\n", ri);
+        printf("%s\n", temp);
+        strlncat(g_read_buf, strlen(g_read_buf), temp, n);
+        memset(temp, 0x0, 512);
+    }
+    printf("接收的消息 %s \n", g_read_buf);
     // TODO: 解析接收的消息
     // printf("释放资源\n");
     socket_destroy(fd, dest_addr);
