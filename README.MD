@@ -1,3 +1,6 @@
+first must install jdk 
+sudo apt install openjdk-8-jdk-headless
+
 
 ## 安装kafka
 
