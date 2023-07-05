@@ -86,6 +86,7 @@ int http_send(const char *body, size_t length) {
     sscanf(body,"%s\r\n%s:%d",g_body_buf, des_ip, &des_port);
 
     memset(g_header_buf, 0x0, HEADER_BUF_SIZE);
+    
     char* header = g_header_buf;
 
     char cl[32] = {0};
