@@ -176,7 +176,7 @@ int consumer(const char *brokers, const char *groupid, char **topics, int topic_
         if (rkm->payload)
         {
             // 接收的数据
-            printf(" Value: (%d bytes): %s\n", (int)rkm->len,(const char*)rkm->payload);
+            printf(" Value: (%d bytes):[-]\n", (int)rkm->len);
             // 调用http消息发送
             http_send((const char*)rkm->payload,(size_t)rkm->len);
         }

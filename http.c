@@ -138,11 +138,15 @@ int http_send(const char *body, size_t length) {
     {
         printf("数据发送失败\n");
         return -1;
+    } else {
+        
+        printf("数据发送成功\n");
+
     }
 
     int ri = 0, n = 0;
     if(g_read_buf == NULL) {
-        g_read_buf = malloc(READ_BUF_SIZE);
+        g_read_buf = (char*)malloc(READ_BUF_SIZE);
     }
     memset(g_read_buf, 0x0, READ_BUF_SIZE);
 
