@@ -8,12 +8,12 @@
 static char *g_read_buf = NULL;
 
 // 1024 * 1024 + 512 284,555 1,049,088
-#define HEADER_BUF_SIZE 1024 * 1024 * 2
+#define HEADER_BUF_SIZE 1024 * 1024 * 1
 static char *g_header_buf = NULL;
 
 //1,048,576 284,555
-#define BODY_BUF_SIZE 1024 * 1024 * 2
-static char *g_body_buf = NULL;
+// #define BODY_BUF_SIZE 1024 * 1024 * 2
+// static char *g_body_buf = NULL;
 
 size_t
 strnlen(const char *s, size_t maxlen)
@@ -73,32 +73,46 @@ int http_send(const char *body, size_t length) {
         return 0;
     }
 
-    printf("内存分配0\n");
     if(g_header_buf == NULL) {
         g_header_buf = (char *)malloc(HEADER_BUF_SIZE);
     }
-    printf("内存分配1\n");
-    if(g_body_buf == NULL) {
-        g_body_buf = (char *)malloc(BODY_BUF_SIZE);
-    }
+ 
+    char *body_buf = NULL;
+    char *des_ip = NULL;
+    char *temp_port = NULL;
 
-    printf("内存分配2\n");
-    memset(g_body_buf, 0x0, BODY_BUF_SIZE);
-
-    char des_ip[32] = {0};
-    char temp_port[8] = {0};
     int des_port = 0;
 
-    printf("内存分配21\n");
-    sscanf(body,"%s\r\n%s\r\n%d",g_body_buf, des_ip, temp_port);
-    des_port = atoi(temp_port);
+    body_buf = strtok((char*)body, "\r\n");
+    printf("temp body[%d]\n",strlen(body_buf));
+    if(body == NULL) {
+        printf("消息解析错误 body_buf\n");
+        return -1;
+    }
+    
+    des_ip = strtok(NULL, "\r\n");
+    if(des_ip == NULL) {
+        printf("消息解析错误 des_ip\n");
+        return -1;
+    }
 
-    printf("内存分配3\n");
+    temp_port = strtok(NULL, "\r\n");
+    if(temp_port == NULL) {
+        printf("消息解析错误 temp_port\n");
+        return -1;
+    }
+
+    des_port = atoi(temp_port);
+    if(des_port == 0) {
+        printf("des_port == 0\n");
+        return -1;
+    }
+
     memset(g_header_buf, 0x0, HEADER_BUF_SIZE);
-    printf("内存分配4\n");
-    printf("msg body %s\n", g_body_buf);
+    
+    printf("msg body [%d]\n", strlen(body_buf));
     printf("host %s:%d \n", des_ip,des_port);
-    printf("内存分配5\n");
+
     char* header = g_header_buf;
 
     char cl[32] = {0};
@@ -132,7 +146,7 @@ int http_send(const char *body, size_t length) {
     strcat(header, "\r\n");
     strcat(header, "\r\n");
 
-    strcat(header, g_body_buf);
+    strcat(header, body_buf);
     strcat(header, "\r\n");
     strcat(header, "\r\n");
 
@@ -148,9 +162,7 @@ int http_send(const char *body, size_t length) {
         printf("数据发送失败\n");
         return -1;
     } else {
-        
         printf("数据发送成功\n");
-
     }
 
     int ri = 0, n = 0;
