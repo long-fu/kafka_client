@@ -145,8 +145,8 @@ int http_send(const char *body, size_t length)
     strcat(header, "User-Agent: Mozilla/5.0");
     strcat(header, "\r\n");
 
-    // strcat(header, "host:22.11.123.78:80\r\n");
-    // strcat(header, "\r\n");
+    strcat(header, "host:22.11.123.78:80\r\n");
+    strcat(header, "\r\n");
 
     strcat(header, cl);
     strcat(header, "\r\n");
@@ -157,8 +157,10 @@ int http_send(const char *body, size_t length)
     strcat(header, "\r\n");
 
     struct sockaddr_in *dest_addr;
+    
+    printf("mesgbodu \n %s\n", header);
 
-    int fd = socket_create("enp0s31f6", "22.10.133.111", 9291, des_ip, des_port, dest_addr);
+    int fd = socket_create("wlp0s20f3", "192.168.2.4", 7890, des_ip, des_port, dest_addr);
     if (fd < 0)
     {
         printf("soc 创建失败\n");
@@ -179,12 +181,12 @@ int http_send(const char *body, size_t length)
 
     int ri = 0, n = 0;
 
-    if (g_read_buf == NULL)
-    {
-        g_read_buf = (char *)malloc(READ_BUF_SIZE);
-    }
+    // if (g_read_buf == NULL)
+    // {
+    //     g_read_buf = (char *)malloc(READ_BUF_SIZE);
+    // }
 
-    memset(g_read_buf, 0x0, READ_BUF_SIZE);
+    // memset(g_read_buf, 0x0, READ_BUF_SIZE);
 
     char temp[512] = {0};
 
@@ -192,13 +194,13 @@ int http_send(const char *body, size_t length)
     {
         // 接收的数据很小
         // printf("接收[%d]=========\n",ri);
-        // printf("%s\n",temp);
-        strlncat(g_read_buf, strlen(g_read_buf), temp, n);
+        printf("%s\n",temp);
+        // strlncat(g_read_buf, strlen(g_read_buf), temp, n);
         memset(temp, 0x0, 512);
     }
-    printf("接收的消息 %s \n", g_read_buf);
+    printf("接收的消息 %s \n", temp);
     // TODO: 解析接收的消息
-    printf("释放资源\n");
+    // printf("释放资源\n");
     socket_destroy(fd, dest_addr);
     return 0;
 }
