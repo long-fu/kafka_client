@@ -20,39 +20,39 @@
 int socket_create(const char *ethx, const char *src_ip, int src_port, const char *dest_ip, int dest_port, struct sockaddr_in *out_dest_addr)
 {
 
-  cap_t caps;
-  cap_value_t cap_list[2];
+  // cap_t caps;
+  // cap_value_t cap_list[2];
 
-  // 初始化能力集
-  caps = cap_get_proc();
-  if (caps == NULL)
-  {
-    perror("cap_get_proc");
-    exit(1);
-  }
+  // // 初始化能力集
+  // caps = cap_get_proc();
+  // if (caps == NULL)
+  // {
+  //   perror("cap_get_proc");
+  //   exit(1);
+  // }
 
-  // 设置 CAP_NET_RAW 和 CAP_NET_BIND_SERVICE 权限
-  cap_list[0] = CAP_NET_RAW;
-  cap_list[1] = CAP_NET_BIND_SERVICE;
-  if (cap_set_flag(caps, CAP_PERMITTED, 2, cap_list, CAP_SET) < 0)
-  {
-    perror("cap_set_flag");
-    exit(1);
-  }
-  if (cap_set_flag(caps, CAP_EFFECTIVE, 2, cap_list, CAP_SET) < 0)
-  {
-    perror("cap_set_flag");
-    exit(1);
-  }
+  // // 设置 CAP_NET_RAW 和 CAP_NET_BIND_SERVICE 权限
+  // cap_list[0] = CAP_NET_RAW;
+  // cap_list[1] = CAP_NET_BIND_SERVICE;
+  // if (cap_set_flag(caps, CAP_PERMITTED, 2, cap_list, CAP_SET) < 0)
+  // {
+  //   perror("cap_set_flag");
+  //   exit(1);
+  // }
+  // if (cap_set_flag(caps, CAP_EFFECTIVE, 2, cap_list, CAP_SET) < 0)
+  // {
+  //   perror("cap_set_flag");
+  //   exit(1);
+  // }
 
-  // 设置能力集
-  if (cap_set_proc(caps) < 0)
-  {
-    perror("cap_set_proc");
-    exit(1);
-  }
+  // // 设置能力集
+  // if (cap_set_proc(caps) < 0)
+  // {
+  //   perror("cap_set_proc");
+  //   exit(1);
+  // }
 
-  cap_free(caps);
+  // cap_free(caps);
 
   // 本地地址配置
   struct sockaddr_in src_addr = {0};
