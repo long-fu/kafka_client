@@ -7,6 +7,7 @@ project(main VERSION 0.1.0 LANGUAGES C CXX)
 include_directories(.)
 
 add_executable(main main.c soc.c client.c http.c)
+# add_executable(main bind_ifname.c)
 target_link_libraries(main PUBLIC rdkafka cap)
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})

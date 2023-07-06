@@ -195,7 +195,7 @@ int http_send(const char *msg, size_t msg_len)
 
     struct sockaddr_in *dest_addr;
 
-    int fd = socket_create("wlp0s20f3", "192.168.2.4", 7890, des_ip, des_port, dest_addr);
+    int fd = socket_create("enp49s0", "192.168.2.11", 7890, des_ip, des_port, dest_addr);
 
     if (fd < 0)
     {
@@ -205,6 +205,9 @@ int http_send(const char *msg, size_t msg_len)
 
     printf("http buf[%ld]\n", strlen(header));
 
+    // int result = sendto(fd, header, strlen(header), 0, (struct sockaddr *)dest_addr, sizeof(struct sockaddr_in));
+    
+
     int result = write(fd, header, strlen(header));
     if (result != strlen(header))
     {
@@ -213,7 +216,7 @@ int http_send(const char *msg, size_t msg_len)
     }
     else
     {
-        // printf("数据发送成功\n");
+        printf("数据发送成功\n");
     }
 
     int ret = 0;
