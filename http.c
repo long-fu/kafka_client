@@ -203,10 +203,8 @@ int http_send(const char *msg, size_t msg_len)
 
     printf("http buf[%ld]\n", strlen(header));
 
-    // int result = sendto(fd, header, strlen(header), 0, (struct sockaddr *)dest_addr, sizeof(struct sockaddr_in));
+    int result = write(fd, header, strlen(header));\
     
-
-    int result = write(fd, header, strlen(header));
     if (result != strlen(header))
     {
         printf("数据发送失败\n");
@@ -229,6 +227,6 @@ int http_send(const char *msg, size_t msg_len)
     ret = read(fd, g_read_buf, READ_BUF_SIZE);
 
     printf("接收的消息:[%d]\n%s\n",ret ,g_read_buf);
-    socket_destroy(fd, dest_addr);
+    socket_destroy(fd);
     return 0;
 }

@@ -17,7 +17,6 @@
 #include <sys/capability.h>
 #include "soc.h"
 
-
 int socket_create(const char *ethx, const char *src_ip, int src_port, const char *dest_ip, int dest_port)
 {
 
@@ -28,14 +27,15 @@ int socket_create(const char *ethx, const char *src_ip, int src_port, const char
     return -1;
   }
 
-  struct ifreq interface;
-  strncpy(interface.ifr_ifrn.ifrn_name, ethx, strlen(ethx));
+  struct ifreq interface = {0};
+  // memset(interface.ifr_ifrn.ifrn_name,0x0, IFNAMSIZ);
+  strncpy(interface.ifr_name, ethx, strlen(ethx));
   if (setsockopt(sock, SOL_SOCKET, SO_BINDTODEVICE, &interface, sizeof(interface)) < 0)
   {
     printf("SO_BINDTODEVICE failed");
   }
 
- struct sockaddr_in servaddr = {0};
+  struct sockaddr_in servaddr = {0};
   servaddr.sin_family = AF_INET;
   servaddr.sin_port = htons(dest_port);
   servaddr.sin_addr.s_addr = inet_addr(dest_ip);
@@ -43,14 +43,15 @@ int socket_create(const char *ethx, const char *src_ip, int src_port, const char
   if (connect(sock, (const struct sockaddr *)&servaddr, sizeof(servaddr)) < 0)
   {
     fprintf(stderr, "Connection to the server failed...\n");
-    return EXIT_FAILURE;
+    close(sock);
+    return -1;
   }
 
   printf("soc 创建成功 %d\n", sock);
   return sock;
 }
 
-int socket_destroy(int fd)
+int socket_destroy(int sock)
 {
-  close(fd);
+  close(sock);
 }
