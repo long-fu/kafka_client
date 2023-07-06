@@ -193,9 +193,7 @@ int http_send(const char *msg, size_t msg_len)
     strcat(header, g_body_buf);
     strcat(header, "\r\n\r\n");
 
-    struct sockaddr_in *dest_addr;
-
-    int fd = socket_create("enp49s0", "192.168.2.11", 7890, des_ip, des_port, dest_addr);
+    int fd = socket_create("enp49s0", "192.168.2.11", 7890, des_ip, des_port);
 
     if (fd < 0)
     {

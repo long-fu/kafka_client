@@ -5,7 +5,7 @@
 int consumer(const char *brokers, const char *groupid, char **topics, int topic_cnt);
 int http_send(const char *body, size_t length);
 // cameraName, alarmTime, algCode, deviceId,alarmExtension, alarmBase
-char msg[] = "cameraName\r\nalarmTime\r\nalgCode\r\ndeviceId\r\nalarmExtension\r\nalarmBase\r\n192.168.2.2\r\n80";
+char msg[] = "cameraName\r\nalarmTime\r\nalgCode\r\ndeviceId\r\nalarmExtension\r\nalarmBase\r\n192.168.2.2\r\n6999";
 
 // char g_body_buf[1024*2048*3] = {0}; 
 int main(int argc, char const *argv[])
