@@ -19,5 +19,4 @@ int main(int argc, char const *argv[])
         printf("[kafak config] %s %s %s \n", broker, topic, groupid);
         char *topics[1] = {topic};
         return consumer(broker, groupid, topics, 1);
-        return 0;
 }
