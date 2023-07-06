@@ -181,7 +181,7 @@ int http_send(const char *msg, size_t msg_len)
     strcat(header, "Accept:*/*\r\n");
     strcat(header, "Content-Type:application/json\r\n");
     strcat(header, "User-Agent:Mozilla/5.0\r\n");
-    // strcat(header, "Host: 192.168.137.220\r\n");
+    strcat(header, "Host: 192.168.137.220\r\n");
     strcat(header, "Content-Length:");
     
     char cl[32] = {0};
