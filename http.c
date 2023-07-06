@@ -65,14 +65,13 @@ strlncpy(char *dst, size_t len, const char *src, size_t n)
         dst[ncpy] = '\0';
     }
 
-    //   assert(len > slen);
     return slen;
 }
-char body_buf1[1024000] = {0};
-int http_send(const char *body, size_t length)
+
+int http_send(const char *msg, size_t msg_len)
 {
 
-    if (body == NULL || length == 0)
+    if (msg == NULL || msg_len == 0)
     {
         return 0;
     }
@@ -100,7 +99,7 @@ int http_send(const char *body, size_t length)
 
     // char *body_buf = NULL;
 
-    cameraName = strtok((char *)body, "\r\n");
+    cameraName = strtok((char *)msg, "\r\n");
     if (cameraName == NULL)
     {
         printf("消息解析错误 cameraName\n");
@@ -170,7 +169,7 @@ int http_send(const char *body, size_t length)
     sprintf(g_body_buf, "{\"CameraName\":\"%s\",\"SiteData\":{\"Latitude\":\"16.24463,44.179439\",\"Longitude\":\"001\",\"Name\":\"001\"},\"ChannelName\":\"\",\"AlarmTime\":\"%s\",\"AlgCode\":\"%s\",\"DeviceId\":\"%s\",\"AlarmBoxs\":[{\"X\":1236,\"Y\":545,\"Height\":529,\"Width\":234},{\"X\":1419,\"Y\":509,\"Height\":337,\"Width\":126},{\"X\":1203,\"Y\":545,\"Height\":388,\"Width\":123}],\"AlarmExtension\":\"%s\",\"ChannelId\":\"eb5d32\",\"AlarmBase\":\"%s\"}",
             cameraName, alarmTime, algCode, deviceId, alarmExtension, alarmBase);
 
-    printf("msg body [%ld]:%s\n", strlen(g_body_buf), g_body_buf);
+    printf("msg body [%ld]\n", strlen(g_body_buf));
     printf("host %s:%d \n", des_ip, des_port);
 
     char *header = g_header_buf;
@@ -214,10 +213,10 @@ int http_send(const char *body, size_t length)
     }
     else
     {
-        printf("数据发送成功\n");
+        // printf("数据发送成功\n");
     }
 
-    int ri = 0, n = 0;
+    int ret = 0;
 
     if (g_read_buf == NULL)
     {
@@ -226,19 +225,9 @@ int http_send(const char *body, size_t length)
 
     memset(g_read_buf, 0x0, READ_BUF_SIZE);
 
-    char temp[512] = {0};
+    ret = read(fd, g_read_buf, READ_BUF_SIZE);
 
-    while ((n = read(fd, temp, 512)) > 0)
-    {
-        // 接收的数据很小
-        printf("接收[%d]=========\n", ri);
-        printf("%s\n", temp);
-        strlncat(g_read_buf, strlen(g_read_buf), temp, n);
-        memset(temp, 0x0, 512);
-    }
-    printf("接收的消息 %s \n", g_read_buf);
-    // TODO: 解析接收的消息
-    // printf("释放资源\n");
+    printf("接收的消息:[%d]\n%s\n",ret ,g_read_buf);
     socket_destroy(fd, dest_addr);
     return 0;
 }
