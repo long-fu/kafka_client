@@ -1,0 +1,11 @@
+[Unit]
+Description=alarm_send.service
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/alarm_send localhost:9092 alarm-events console-consumer-62319
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target

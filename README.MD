@@ -1,7 +1,3 @@
-first must install jdk 
-sudo apt install openjdk-8-jdk-headless
-
-
 ## 安装kafka
 
 > **NOTE: Your local environment must have Java 8+ installed.**
@@ -9,6 +5,9 @@ sudo apt install openjdk-8-jdk-headless
 [官方教程](https://kafka.apache.org/34/documentation.html)
 
 ```sh
+#  install jdk 
+sudo apt install openjdk-8-jdk-headless
+
 cd ~
 
 wget https://archive.apache.org/dist/kafka/3.4.0/kafka_2.13-3.4.0.tgz
@@ -26,27 +25,22 @@ bin/kafka-storage.sh format -t $KAFKA_CLUSTER_ID -c config/kraft/server.properti
 bin/kafka-server-start.sh config/kraft/server.properties
 
 # 创建topic - 后续有用上
-bin/kafka-topics.sh --create --topic quickstart-events --bootstrap-server localhost:9092
+bin/kafka-topics.sh --create --topic alarm-events --bootstrap-server localhost:9092
 
 # 查看topic 
-bin/kafka-topics.sh --describe --topic quickstart-events --bootstrap-server localhost:9092
-
-# 查看消费者组 - 后续有用上
-bin/kafka-consumer-groups.sh --bootstrap-server localhost:9092 --list
-
+bin/kafka-topics.sh --describe --topic alarm-events --bootstrap-server localhost:9092
 
 #---以下是测试---
 
 # 进入生产者交互窗口
-bin/kafka-console-producer.sh --topic quickstart-events --bootstrap-server localhost:9092
-
-bin/kafka-console-producer.sh --topic haoshuai-events --bootstrap-server localhost:9092
-
+bin/kafka-console-producer.sh --topic alarm-events --bootstrap-server localhost:9092
 
 # 进入消费者交互窗口
-bin/kafka-console-consumer.sh --topic quickstart-events --from-beginning --bootstrap-server localhost:9092
+bin/kafka-console-consumer.sh --topic alarm-events --from-beginning --bootstrap-server localhost:9092
 
-bin/kafka-console-consumer.sh --topic haoshuai-events --from-beginning --bootstrap-server localhost:9092
+# 查看消费者组 - 后续有用上
+bin/kafka-consumer-groups.sh --bootstrap-server localhost:9092 --list
+
 
 # 一个简单的web UI监控服务
 docker run --net=host \
