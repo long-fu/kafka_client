@@ -23,16 +23,22 @@ int socket_create(const char *ethx, const char *src_ip, int src_port, const char
   int sock = -1;
   if ((sock = socket(AF_INET, SOCK_STREAM, 0)) < 0)
   {
-    printf("socket create failed");
+    // printf("socket create failed");
+    printf("[socket error] code:'%d' msg:'%s'\n" ,errno, strerror(errno));
     return -1;
   }
 
-  struct ifreq interface = {0};
+  // struct ifreq interface = {0};
   // memset(interface.ifr_ifrn.ifrn_name,0x0, IFNAMSIZ);
-  strncpy(interface.ifr_name, ethx, strlen(ethx));
+  // strncpy(interface.ifr_name, ethx, strlen(ethx));
+
+  const struct ifreq interface = {
+      .ifr_name = ethx,
+  };
+
   if (setsockopt(sock, SOL_SOCKET, SO_BINDTODEVICE, &interface, sizeof(interface)) < 0)
   {
-    printf("SO_BINDTODEVICE failed");
+    printf("[setsockopt SO_BINDTODEVICE error] code:'%d' msg:'%s'\n" ,errno, strerror(errno));
   }
 
   struct sockaddr_in servaddr = {0};
@@ -42,12 +48,12 @@ int socket_create(const char *ethx, const char *src_ip, int src_port, const char
 
   if (connect(sock, (const struct sockaddr *)&servaddr, sizeof(servaddr)) < 0)
   {
-    fprintf(stderr, "Connection to the server failed...\n");
+    // fprintf(stderr, "connection to the server failed...\n");
+    printf("[connect error] code:'%d' msg:'%s'\n" ,errno, strerror(errno));
     close(sock);
     return -1;
   }
 
-  printf("soc 创建成功 %d\n", sock);
   return sock;
 }
 

@@ -176,12 +176,12 @@ int http_send(const char *msg, size_t msg_len)
 
     strcat(header, "POST /api/smartbox/AlarmPost HTTP/1.1\r\n");
     strcat(header, "Cache-Control:no-cache\r\n");
-    strcat(header, "Connection:Keep-Alive\r\n");
+    strcat(header, "Connection:close\r\n");
     strcat(header, "Accept-Encoding:gzip,deflate,br\r\n");
     strcat(header, "Accept:*/*\r\n");
     strcat(header, "Content-Type:application/json\r\n");
     strcat(header, "User-Agent:Mozilla/5.0\r\n");
-    strcat(header, "host:192.168.137.220\r\n");
+    // strcat(header, "Host: 192.168.137.220\r\n");
     strcat(header, "Content-Length:");
     
     char cl[32] = {0};
@@ -193,7 +193,7 @@ int http_send(const char *msg, size_t msg_len)
     strcat(header, g_body_buf);
     strcat(header, "\r\n\r\n");
 
-    int fd = socket_create("enp49s0", "192.168.2.11", 7890, des_ip, des_port);
+    int fd = socket_create("wlp0s20f3", "192.168.2.4", 7890, des_ip, des_port);
 
     if (fd < 0)
     {
