@@ -79,4 +79,38 @@ int consumer(const char *brokers, const char *groupid, char **topics, int topic_
 
 ```
 
-sudo apt-get install libcap-dev
+## 部署配置
+
+> hack中的脚本存放位置
+
+```sh
+cd kafka_install
+tree -L 2
+
+├── install.sh # 拷贝此处
+├── kafka_2.13-3.5.0
+│   ├── bin
+│   ├── config
+│   ├── kafka.service # 拷贝此处
+│   ├── libs
+│   ├── LICENSE
+│   ├── licenses
+│   ├── logs
+│   ├── NOTICE
+│   ├── site-docs
+│   ├── start_kafka.sh # 拷贝此处
+│   ├── stop_kafka.sh # 拷贝此处
+├── kafka_client
+│   ├── alarm_send.service # 拷贝此处
+│   ├── build
+│   ├── client.c
+│   ├── CMakeLists.txt
+│   ├── http.c
+│   ├── main.c
+│   ├── README.MD
+│   ├── soc.c
+│   └── soc.h
+├── librdkafka
+└── uninstall.sh # 拷贝此处
+
+```
