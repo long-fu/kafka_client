@@ -1,0 +1,14 @@
+[Unit]
+Description=Apache Kafka Server (broker)
+After=network.target
+
+[Service]
+Type=simple
+Environment="PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+User=root
+Group=root
+ExecStart=/home/azurengine/workspace/kafka_2.13-3.4.0/bin/kafka-storage.sh format -t kjGs-WBMR32zlH2ckNcLUw -c /home/azurengine/workspace/kafka_2.13-3.4.0/config/kraft/server.properties
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

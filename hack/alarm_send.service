@@ -1,5 +1,6 @@
 [Unit]
 Description=alarm_send.service
+After=network.target kafak_config.service kafka.service
 
 [Service]
 Type=simple
