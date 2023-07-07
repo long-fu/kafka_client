@@ -14,7 +14,6 @@
 #include <sys/ioctl.h>
 #include <sys/socket.h>
 #include <sys/types.h>
-#include <sys/capability.h>
 #include "soc.h"
 
 int socket_create(const char *ethx, const char *src_ip, int src_port, const char *dest_ip, int dest_port)

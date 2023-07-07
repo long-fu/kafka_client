@@ -11,22 +11,18 @@ wget https://archive.apache.org/dist/kafka/3.4.0/kafka_2.13-3.4.0.tgz
 
 tar -xzf kafka_2.13-3.4.0.tgz
 
-cd kafka_2.13-3.4.0
+# cd kafka_2.13-3.4.0
 
-KAFKA_CLUSTER_ID="$(bin/kafka-storage.sh random-uuid)"
+# KAFKA_CLUSTER_ID="$(bin/kafka-storage.sh random-uuid)"
 
-# 2.1格式化日志
-bin/kafka-storage.sh format -t $KAFKA_CLUSTER_ID -c config/kraft/server.properties
+# # 2.1格式化日志
+# bin/kafka-storage.sh format -t $KAFKA_CLUSTER_ID -c config/kraft/server.properties
 
-# 2.1启动kafka
-bin/kafka-server-start.sh config/kraft/server.properties
+# # 2.1启动kafka
+# bin/kafka-server-start.sh config/kraft/server.properties
 
-# 重新开一个命令窗口
-# 2.2创建topic - 后续有用上
-bin/kafka-topics.sh --create --topic alarm-events --bootstrap-server localhost:9092
-
-# 2.1查看topic 
-bin/kafka-topics.sh --describe --topic alarm-events --bootstrap-server localhost:9092
+# # 2.1  查看topic 
+# bin/kafka-topics.sh --list --bootstrap-server localhost:9092
 
 #3.编译kafka c/c++客户端 librdkafka
 

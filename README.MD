@@ -30,13 +30,16 @@ bin/kafka-topics.sh --create --topic alarm-events --bootstrap-server localhost:9
 # 查看topic 
 bin/kafka-topics.sh --describe --topic alarm-events --bootstrap-server localhost:9092
 
+bin/kafka-topics.sh --list --bootstrap-server localhost:9092
+
+
 #---以下是测试---
 
 # 进入生产者交互窗口
-bin/kafka-console-producer.sh --topic alarm-events --bootstrap-server localhost:9092
+bin/kafka-console-producer.sh --topic alarm-events-new --bootstrap-server localhost:9092
 
 # 进入消费者交互窗口
-bin/kafka-console-consumer.sh --topic alarm-events --from-beginning --bootstrap-server localhost:9092
+bin/kafka-console-consumer.sh --topic alarm-events-new --from-beginning --bootstrap-server localhost:9092
 
 # 查看消费者组 - 后续有用上
 bin/kafka-consumer-groups.sh --bootstrap-server localhost:9092 --list
