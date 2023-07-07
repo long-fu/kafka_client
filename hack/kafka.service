@@ -5,13 +5,13 @@ After=network.target
 
 [Service]
 Type=simple
-Environment="PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+Environment="JDK_HOME"
 User=root
 Group=root
-ExecStart=/home/azurengine/workspace/kafka_2.13-3.4.0/bin/kafka-server-start.sh /home/azurengine/workspace/kafka_2.13-3.4.0/config/kraft/server.properties
-ExecStop=/home/azurengine/workspace/kafka_2.13-3.4.0/bin/kafka-server-stop.sh
+ExecStart=start.sh
+ExecStop=stop.sh
 Restart=on-failure
-RestartSec=60
+RestartSec=30
 
 [Install]
 WantedBy=multi-user.target
