@@ -1,6 +1,7 @@
 [Unit]
 Description=Apache Kafka Server (broker)
-After=network.target kafak_config.service
+Requires=network.target
+After=network.target
 
 [Service]
 Type=simple
@@ -10,7 +11,7 @@ Group=root
 ExecStart=/home/azurengine/workspace/kafka_2.13-3.4.0/bin/kafka-server-start.sh /home/azurengine/workspace/kafka_2.13-3.4.0/config/kraft/server.properties
 ExecStop=/home/azurengine/workspace/kafka_2.13-3.4.0/bin/kafka-server-stop.sh
 Restart=on-failure
-RestartSec=10
+RestartSec=60
 
 [Install]
 WantedBy=multi-user.target
