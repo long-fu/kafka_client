@@ -8,11 +8,13 @@
 #define READ_BUF_SIZE 1024
 static char *g_read_buf = NULL;
 
-// 1024 * 1024 + 512 284,555 1,049,088
-#define HEADER_BUF_SIZE 1049088
+// 1024 * 1024 * 32 + 512
+#define HEADER_BUF_SIZE 33554944
 static char *g_header_buf = NULL;
 
-#define BODY_BUF_SIZE 1024 * 1024
+// 1024 * 1024 * 32
+#define BODY_BUF_SIZE 33554432
+
 static char *g_body_buf = NULL;
 
 size_t
