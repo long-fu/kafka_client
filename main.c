@@ -22,7 +22,7 @@ int main(int argc, char const *argv[])
         // char *topics[1] = {topic};
         // return consumer(broker, groupid, topics, 1);
         FILE *fp;
-        fp = fopen("/home/haoshuai/code/kafka_client/README.pdf", "r");
+        fp = fopen("/home/haoshuai/code/kafka_client/opencv-3.4.16.zip", "r");
         if (fp == NULL)
         {
 

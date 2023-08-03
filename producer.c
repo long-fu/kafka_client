@@ -26,6 +26,11 @@ int producer(const char *brokers, const char *topic, char *buf, size_t buf_size)
     rd_kafka_conf_t *conf; /* Temporary configuration object */
     rd_kafka_resp_err_t err;
     char errstr[512];
+    
+    if (buf_size >= 33554400) {
+        fprintf(stderr, "%% Failed message buf size: %ld > 33554400\n", buf_size);
+        return -1;
+    }
 
     conf = rd_kafka_conf_new();
 
@@ -38,13 +43,13 @@ int producer(const char *brokers, const char *topic, char *buf, size_t buf_size)
     {
         fprintf(stderr, "%s\n", errstr);
         rd_kafka_conf_destroy(conf);
-        return 1;
+        return -1;
     }
 
-    if(rd_kafka_conf_set(conf, "message.max.bytes", "33554432", errstr,sizeof(errstr)) != RD_KAFKA_CONF_OK) {
+    if(rd_kafka_conf_set(conf, "message.max.bytes", "33554400", errstr,sizeof(errstr)) != RD_KAFKA_CONF_OK) {
         fprintf(stderr, "%s\n", errstr);
         rd_kafka_conf_destroy(conf);
-        return 1;
+        return -1;
     }
 
     /* Enable the idempotent producer */
@@ -53,7 +58,7 @@ int producer(const char *brokers, const char *topic, char *buf, size_t buf_size)
     {
         fprintf(stderr, "%s\n", errstr);
         rd_kafka_conf_destroy(conf);
-        return 1;
+        return -1;
     }
 
     /* Set the delivery report callback.
@@ -76,14 +81,14 @@ int producer(const char *brokers, const char *topic, char *buf, size_t buf_size)
     {
         fprintf(stderr, "%% Failed to create new producer: %s\n",
                 errstr);
-        return 1;
+        return -1;
     }
 
     if (buf_size == 0)
     {
         /* Empty line: only serve delivery reports */
         rd_kafka_poll(rk, 0 /*non-blocking */);
-        return 1;
+        return -1;
     }
 retry:
     err = rd_kafka_producev(

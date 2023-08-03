@@ -32,8 +32,6 @@ int consumer(const char *brokers, const char *groupid, char **topics, int topic_
      */
     conf = rd_kafka_conf_new();
 
-
-
     /* Set bootstrap broker(s) as a comma-separated list of
      * host or host:port (default port 9092).
      * librdkafka will use the bootstrap brokers to acquire the full
@@ -45,14 +43,6 @@ int consumer(const char *brokers, const char *groupid, char **topics, int topic_
         rd_kafka_conf_destroy(conf);
         return 1;
     }
-
-    // if (rd_kafka_conf_set(conf, "message.max.bytes", "104857600", errstr,
-    //                       sizeof(errstr)) != RD_KAFKA_CONF_OK)
-    // {
-    //     fprintf(stderr, "%s\n", errstr);
-    //     rd_kafka_conf_destroy(conf);
-    //     return 1;
-    // }
 
     /* Set the consumer group id.
      * All consumers sharing the same group id will join the same
