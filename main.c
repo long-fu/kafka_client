@@ -22,7 +22,7 @@ int main(int argc, char const *argv[])
         // char *topics[1] = {topic};
         // return consumer(broker, groupid, topics, 1);
         FILE *fp;
-        fp = fopen("/home/haoshuai/code/kafka_client/opencv-3.4.16.zip", "r");
+        fp = fopen("/home/haoshuai/code/kafka_client/README.pdf", "r");
         if (fp == NULL)
         {
 
@@ -36,11 +36,11 @@ int main(int argc, char const *argv[])
         fseek(fp, 0, SEEK_SET);
         fread(data, 1, file_size, fp);
         printf("发送消息大小 %d\n", file_size);
-        producer("localhost:9092", "alarm-events1", data, file_size);
+        producer("192.168.2.4:9092", "alarm-events", data, file_size);
         free(data);
         fclose(fp);
         return 0;
 
         // char *topics[1] = {"alarm-events"};
-        // return consumer("localhost:9092", "console-consumer-62377", topics, 1);
+        // return consumer("127.0.0.1:9092", "console-consumer-62377", topics, 1);
 }

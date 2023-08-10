@@ -155,6 +155,10 @@ int consumer(const char *brokers, const char *groupid, char **topics, int topic_
              * try to recover from all types of errors. */
             fprintf(stderr, "%% Consumer error: %s\n",
                     rd_kafka_message_errstr(rkm));
+            if(rkm->err == RD_KAFKA_RESP_ERR_TOPIC_EXCEPTION) {
+                // 创建topic
+            }
+
             rd_kafka_message_destroy(rkm);
             continue;
         }

@@ -22,12 +22,16 @@ dr_msg_cb(rd_kafka_t *rk, const rd_kafka_message_t *rkmessage, void *opaque)
 
 int producer(const char *brokers, const char *topic, char *buf, size_t buf_size)
 {
+    rd_kafka_topic_t *rkt;
     rd_kafka_t *rk;        /* Producer instance handle */
     rd_kafka_conf_t *conf; /* Temporary configuration object */
+    rd_kafka_topic_conf_t *topic_conf;
     rd_kafka_resp_err_t err;
+
     char errstr[512];
-    
-    if (buf_size >= 33554400) {
+
+    if (buf_size >= 33554400)
+    {
         fprintf(stderr, "%% Failed message buf size: %ld > 33554400\n", buf_size);
         return -1;
     }
@@ -46,7 +50,8 @@ int producer(const char *brokers, const char *topic, char *buf, size_t buf_size)
         return -1;
     }
 
-    if(rd_kafka_conf_set(conf, "message.max.bytes", "33554400", errstr,sizeof(errstr)) != RD_KAFKA_CONF_OK) {
+    if (rd_kafka_conf_set(conf, "message.max.bytes", "33554400", errstr, sizeof(errstr)) != RD_KAFKA_CONF_OK)
+    {
         fprintf(stderr, "%s\n", errstr);
         rd_kafka_conf_destroy(conf);
         return -1;
@@ -60,7 +65,7 @@ int producer(const char *brokers, const char *topic, char *buf, size_t buf_size)
         rd_kafka_conf_destroy(conf);
         return -1;
     }
-
+    // rd_kafka_topic_new()
     /* Set the delivery report callback.
      * This callback will be called once per message to inform
      * the application if delivery succeeded or failed.
