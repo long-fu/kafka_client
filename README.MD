@@ -36,7 +36,7 @@ bin/kafka-topics.sh --list --bootstrap-server localhost:9092
 #---以下是测试---
 
 # 进入生产者交互窗口
-bin/kafka-console-producer.sh --topic alarm-events-new --bootstrap-server localhost:9092
+bin/kafka-console-producer.sh --topic alarm-events --bootstrap-server localhost:9092
 
 # 进入消费者交互窗口
 bin/kafka-console-consumer.sh --topic alarm-events-new --from-beginning --bootstrap-server localhost:9092

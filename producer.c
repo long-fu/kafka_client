@@ -65,7 +65,7 @@ int producer(const char *brokers, const char *topic, char *buf, size_t buf_size)
         rd_kafka_conf_destroy(conf);
         return -1;
     }
-    // rd_kafka_topic_new()
+ 
     /* Set the delivery report callback.
      * This callback will be called once per message to inform
      * the application if delivery succeeded or failed.

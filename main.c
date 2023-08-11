@@ -36,7 +36,7 @@ int main(int argc, char const *argv[])
         fseek(fp, 0, SEEK_SET);
         fread(data, 1, file_size, fp);
         printf("发送消息大小 %d\n", file_size);
-        producer("192.168.2.4:9092", "alarm-events", data, file_size);
+        producer("localhost:9094", "alarm-events", data, file_size);
         free(data);
         fclose(fp);
         return 0;
