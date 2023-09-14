@@ -7,8 +7,8 @@ int consumer(const char *brokers, const char *groupid, char **topics, int topic_
 int http_send(const char *body, size_t length);
 int producer(const char *brokers, const char *topic, char *buf, size_t buf_size);
 // cameraName, alarmTime, algCode, deviceId,alarmExtension, alarmBase
-char msg[] = "cameraName\r\nalarmTime\r\nalgCode\r\ndeviceId\r\nalarmExtension\r\nalarmBase\r\n192.168.2.2\r\n8080";
-
+char msg1[] = "cameraName\r\n2023-08-16-18-22\r\n701\r\ndeviceId\r\nalarmExtension\r\nalarmBase\r\n192.168.2.2\r\n8080";
+char msg2[] = "cameraName\r\n2023-08-16-18-22\r\n702\r\ndeviceId\r\nalarmExtension\r\nalarmBase\r\n192.168.2.2\r\n8080";
 // char g_body_buf[1024*2048*3] = {0};
 int main(int argc, char const *argv[])
 {
@@ -36,7 +36,9 @@ int main(int argc, char const *argv[])
         fseek(fp, 0, SEEK_SET);
         fread(data, 1, file_size, fp);
         printf("发送消息大小 %d\n", file_size);
-        producer("localhost:9094", "alarm-events", data, file_size);
+        producer("192.168.2.30:9092", "alarm-events", data, file_size);
+        // producer("192.168.2.10:9092", "alarm-events", msg1, strlen(msg1));
+        // producer("localhost:9092", "alarm-events", msg2, strlen(msg2));
         free(data);
         fclose(fp);
         return 0;

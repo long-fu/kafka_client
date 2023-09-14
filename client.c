@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <signal.h>
 #include <string.h>
-
+#include <sys/time.h>
 
 #include <librdkafka/rdkafka.h>
 
@@ -19,6 +19,14 @@ static void stop(int sig)
     run = 0;
 }
 
+static void
+logger(const rd_kafka_t *rk, int level, const char *fac, const char *buf) {
+        struct timeval tv;
+        gettimeofday(&tv, NULL);
+        fprintf(stdout, "%u.%03u RDKAFKA-%i-%s: %s: %s\n", (int)tv.tv_sec,
+                (int)(tv.tv_usec / 1000), level, fac, rd_kafka_name(rk), buf);
+}
+
 int consumer(const char *brokers, const char *groupid, char **topics, int topic_cnt)
 {
     rd_kafka_t *rk;                                /* Consumer instance handle */
@@ -32,6 +40,8 @@ int consumer(const char *brokers, const char *groupid, char **topics, int topic_
      */
     conf = rd_kafka_conf_new();
 
+    rd_kafka_conf_set_log_cb(conf, logger);
+    
     /* Set bootstrap broker(s) as a comma-separated list of
      * host or host:port (default port 9092).
      * librdkafka will use the bootstrap brokers to acquire the full
