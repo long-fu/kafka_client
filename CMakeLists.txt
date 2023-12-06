@@ -4,11 +4,17 @@ project(alarm_send VERSION 0.1.0 LANGUAGES C CXX)
 # include(CTest)
 # enable_testing()
 
-include_directories(.)
+include_directories(
+    ${CMAKE_SOURCE_DIR}/thirdpart/include
+)
+
+link_directories(
+    ${CMAKE_SOURCE_DIR}/thirdpart/lib
+)
 
 add_executable(alarm_send main.c soc.c client.c http.c producer.c)
 # add_executable(main bind_ifname.c)
-target_link_libraries(alarm_send ${PROJECT_SOURCE_DIR}/lib/librdkafka.so.1)
+target_link_libraries(alarm_send PUBLIC rdkafka)
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
